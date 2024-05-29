@@ -1,0 +1,30 @@
+body {
+    background-color: darkslategray;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center;
+}
+
+.card {
+    margin: 10px; 
+}
+
+.card-body {
+    background-color: darkgray;
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        margin-top: 100px; 
+    }
+    
+    .card {
+        width: 80%; 
+    }
+}

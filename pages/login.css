@@ -1,0 +1,25 @@
+body {
+    background-color: darkslategray;
+}
+
+.container {
+    background-color: darkgray;
+    width: 90%;
+    max-width: 400px;
+    height: 400px;
+    margin: 100px auto 0;
+    border: 2px solid black;
+    border-radius: 7px;
+}
+
+form {
+    padding-top: 50px;
+    text-align: center;
+    color: darkslategrey;
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        margin-top: 50px;
+    }
+}

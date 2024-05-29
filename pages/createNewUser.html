@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login</title>
+        <link rel="stylesheet" href="login.css">
+    </head>
+    <body>
+        <div class="container">
+            <form action="createNewUser.php" method="post">
+                <br>
+                <!-- username -->
+                <h1>
+                    Enter email:<br>
+                    <input type="text" placeholder="user-name" name="userName" required>
+                </h1>
+                
+                <!-- password -->
+                <h1>
+                    Enter new password:
+                    <input type="password" placeholder="password" name="password" required  >
+                </h1><br> 
+
+                <!-- user or admin -->
+                <select name="option">
+                    <option value="admin">admin</option>
+                    <option value="user">user</option>
+                </select>
+
+                <input type="submit">
+            </form>
+        </div>
+    </body>
+</html>
