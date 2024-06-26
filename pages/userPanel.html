@@ -43,6 +43,11 @@
             .apartment-card .price, .apartment-card .address {
                 font-weight: bold;
             }
+            .apartment-card .actions {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
         </style>
     </head>
     <body>
@@ -51,42 +56,39 @@
             <div id="apartments-container"></div>
         </div>
 
-         
-
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script>
             $('body').on('click', '.buy_now', function(e) {
-            var totalAmount = $(this).attr("data-amount");
-            var product_id =  $(this).attr("data-id");
-            var options = {
-            "key": "rzp_test_69wuBPjBl3prUK",
-            "amount": (1*100),
-            "name": "APARTMENTHAVEN",
-            "description": "Payment",
-            "handler": function (response) {
-                    $.ajax({
-                    url: 'payment.php',
-                    type: 'post',
-                    dataType: 'json',
-                    data: {
-                        razorpay_payment_id: response.razorpay_payment_id , totalAmount : totalAmount ,product_id : product_id,
-                    }, 
-                    success: function (msg) {
-                        window.location.href = 'https://soorya38.github.io/invoiceGenerator/';
+                var totalAmount = $(this).attr("data-amount");
+                var product_id =  $(this).attr("data-id");
+                var options = {
+                    "key": "rzp_test_69wuBPjBl3prUK",
+                    "amount": (1*100),
+                    "name": "APARTMENTHAVEN",
+                    "description": "Payment",
+                    "handler": function (response) {
+                        $.ajax({
+                            url: 'payment.php',
+                            type: 'post',
+                            dataType: 'json',
+                            data: {
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                totalAmount: totalAmount,
+                                product_id: product_id,
+                            },
+                            success: function (msg) {
+                                window.location.href = 'https://soorya38.github.io/invoiceGenerator/';
+                            }
+                        });
+                    },
+                    "theme": {
+                        "color": "#528FF0"
                     }
-                });
-            
-            }, 
-
-            "theme": {
-                "color": "#528FF0"
-            }
-            };
-            var rzp1 = new Razorpay(options);
-            rzp1.open();
-            e.preventDefault();
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+                e.preventDefault();
             });
-
 
             document.addEventListener('DOMContentLoaded', function() {
                 fetch('userPanel.php')
@@ -103,6 +105,7 @@
                             data.forEach(apartment => {
                                 const div = document.createElement('div');
                                 div.className = 'apartment-card';
+                                div.setAttribute('data-id', apartment.id); // Assuming each apartment has a unique id
                                 div.innerHTML = `
                                     <img src="${apartment.image}" alt="${apartment.title}">
                                     <div class="apartment-card-content">
@@ -110,7 +113,10 @@
                                         <p>${apartment.description}</p>
                                         <p class="price">Price: $${apartment.price}</p>
                                         <p class="address">Address: ${apartment.address}</p>
-                                        <a href="javascript:void(0)" class="btn btn-sm btn-primary float-right buy_now" data-amount="1000" data-id="1">Book Now</a>
+                                        <div class="actions">
+                                            <a href="javascript:void(0)" class="btn btn-sm btn-primary buy_now" data-amount="1000" data-id="1">Book Now</a>
+                                            <a href="javascript:void(0)" class="btn btn-sm btn-danger delete" data-id="${apartment.id}">Delete</a>
+                                        </div>
                                     </div>
                                 `;
                                 container.appendChild(div);
@@ -120,6 +126,57 @@
                     .catch(error => {
                         console.error('Error fetching apartments:', error);
                     });
+            });
+
+            $('body').on('click', '.delete', function() {
+            var apartmentId = $(this).attr('data-id');
+            var card = $(this).closest('.apartment-card');
+
+            $.ajax({
+                url: 'deleteApartment.php',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    id: apartmentId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        card.remove();
+                    } else {
+                        alert('Failed to delete the apartment: ' + response.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error deleting apartment:', error);
+                    alert('Failed to delete the apartment');
+                }
+            });
+        });
+
+
+            $('body').on('click', '.delete', function() {
+                var apartmentId = $(this).attr('data-id');
+                var card = $(this).closest('.apartment-card');
+
+                $.ajax({
+                    url: 'deleteApartment.php',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        id: apartmentId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            card.remove();
+                        } else {
+                            alert('Failed to delete the apartment');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error deleting apartment:', error);
+                        alert('Failed to delete the apartment');
+                    }
+                });
             });
         </script>
     </body>
